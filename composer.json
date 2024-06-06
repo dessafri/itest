@@ -1,0 +1,18 @@
+{
+	"require": {
+		"league/omnipay": "^3.2",
+		"omnipay/paypal": "^3.0",
+		"omnipay/stripe": "^3.1",
+		"fzaninotto/faker": "^1.5",
+		"guzzlehttp/guzzle": "^7.0",
+		"mpdf/mpdf": "^8.0",
+		"aferrandini/phpqrcode": "^1.0"
+	},
+	"config": {
+		"allow-plugins": {
+			"php-http/discovery": true
+		}
+	},
+	"require-dev": {
+	}
+}
