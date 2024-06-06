@@ -430,7 +430,7 @@ class Take_exam extends Admin_Controller
                                         }
                                     }
                                 }elseif ($typeID == 4) {
-                                    $data = $this->question_option_m->get_answer_by_id(72);
+                                    $data = $this->question_option_m->get_answer_by_id($userAnswer[$typeID][$questionID][0]);
                                     $totalQuestionMark += $data->nilaijawaban;
                                     $correctAnswer++;
                                     if (!isset($visited[$typeID][$questionID])) {
