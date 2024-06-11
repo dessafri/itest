@@ -179,6 +179,7 @@ public $load;
 	}
 
 	public function index() {
+		
 		$this->data['parents'] = $this->parents_m->get_parents();
 		$this->data["subview"] = "parents/index";
 		$this->load->view('_layout_main', $this->data);

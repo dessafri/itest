@@ -45,6 +45,57 @@
                             <?php echo form_error('guargianID'); ?>
                         </span>
                     </div>
+                    <div class="form-group <?=form_error('AtasanID') ? 'has-error' : ''?>">
+                        <label for="AtasanID" class="col-sm-2 control-label">
+                            Atasan
+                        </label>
+                        <div class="col-sm-6">
+                            <?php
+                                $array = array('0' => $this->lang->line('student_select_guargian'));
+                                foreach ($students as $student) {
+                                    $array[$student->studentID] = $student->name;
+                                }
+                                echo form_multiselect("AtasanID[]", $array, set_value("AtasanID"), "id='AtasanID' class='form-control guargianID select2'");
+                            ?>
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('guargAtasanIDianID'); ?>
+                        </span>
+                    </div>
+                    <div class="form-group <?=form_error('RekananID') ? 'has-error' : ''?>">
+                        <label for="RekananID" class="col-sm-2 control-label">
+                            Rekanan
+                        </label>
+                        <div class="col-sm-6">
+                            <?php
+                                $array = array('0' => $this->lang->line('student_select_guargian'));
+                                foreach ($students as $student) {
+                                    $array[$student->studentID] = $student->name;
+                                }
+                                echo form_multiselect("RekananID[]", $array, set_value("RekananID"), "id='RekananID' class='form-control guargianID select2'");
+                            ?>
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('RekananID'); ?>
+                        </span>
+                    </div>
+                    <div class="form-group <?=form_error('BawahanID') ? 'has-error' : ''?>">
+                        <label for="BawahanID" class="col-sm-2 control-label">
+                            Bawahan
+                        </label>
+                        <div class="col-sm-6">
+                            <?php
+                                $array = array('0' => $this->lang->line('student_select_guargian'));
+                                foreach ($students as $student) {
+                                    $array[$student->studentID] = $student->name;
+                                }
+                                echo form_multiselect("BawahanID[]", $array, set_value("BawahanID"), "id='BawahanID' class='form-control guargianID select2'");
+                            ?>
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('BawahanID'); ?>
+                        </span>
+                    </div>
 
                     <div class="form-group <?=form_error('dob') ? 'has-error' : ''?>">
                         <label for="dob" class="col-sm-2 control-label">

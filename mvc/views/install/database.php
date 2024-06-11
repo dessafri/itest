@@ -1,4 +1,4 @@
-
+	
 <div class="panel panel-default">
     <div class="panel-heading-install">
 		<ul class="nav nav-pills">

@@ -375,7 +375,7 @@ echo form_dropdown("totalOption", $array, set_value("totalOption"), "id='totalOp
          + '<div class="col-sm-4" style="display:inline-table">'
          + '<input type="text" class="form-control" id="option' + id + '" name="option[]" value="' + value + '" placeholder="<?=$this->lang->line("question_bank_option")?> ' + id + '">'
          + '<span class="input-group-addon">'
-         + '<input class="answer" id="ans' + id + '" checked type="checkbox" name="answer[]" value="' + id + '" data-toggle="tooltip" data-placement="top" title="Correct Answer" ' + required + ' />'
+         + '<input class="answer" id="ans' + id + '" checked type="radio" name="answer[]" value="' + id + '" data-toggle="tooltip" data-placement="top" title="Correct Answer" ' + required + ' />'
          + '</span>'
          + '</div>'
          + '<div class="col-sm-3" style="display:inline-table">'

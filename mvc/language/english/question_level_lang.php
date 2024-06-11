@@ -1,8 +1,8 @@
 <?php
 
 /* List Language  */
-$lang['panel_title'] = "Question Level";
-$lang['add_title'] = "Add a Question Level";
+$lang['panel_title'] = "Question Sub";
+$lang['add_title'] = "Add a Question Sub";
 $lang['slno'] = "#";
 $lang['question_level_name'] = "Name";
 $lang['question_level_title'] = "Title";
@@ -18,8 +18,8 @@ $lang["mail"] = "Send Pdf to Mail";
 
 /* Add Language */
 
-$lang['add_class'] = 'Add Question Level';
-$lang['update_class'] = 'Update Question Level';
+$lang['add_class'] = 'Add Question Sub';
+$lang['update_class'] = 'Update Question Sub';
 
 $lang['to'] = 'To';
 $lang['subject'] = 'Subject';

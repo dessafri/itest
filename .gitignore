@@ -3,7 +3,6 @@ application/cache/*
 !application/cache/.htaccess
 
 application/logs/*
-mvc/config/database.php
 !application/logs/index.html
 !application/logs/.htaccess
 
@@ -20,7 +19,6 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 .DS_Store
 /.idea/
 /uploads
-/mvc/config/database.php
 
 ## Sublime Text cache files
 *.tmlanguage.cache
