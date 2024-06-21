@@ -9,6 +9,8 @@ class Question_bank extends Admin_Controller {
     public $form_validation;
     public $uri;
     public $question_bank_m;
+    public $parents_m;
+    public $student_m;
     public $upload;
     /**
      * @var array<string, mixed>
@@ -36,6 +38,8 @@ class Question_bank extends Admin_Controller {
         $this->load->model("question_group_m");
         $this->load->model("question_level_m");
         $this->load->model("question_type_m");
+        $this->load->model("student_m");
+        $this->load->model("parents_m");
         $this->load->model("question_answer_m");
         $this->load->model("question_option_m");
         $this->load->model("online_exam_question_m");
@@ -267,6 +271,8 @@ class Question_bank extends Admin_Controller {
         $this->data['answers']   = [];
         $this->data['typeID']    = 0;
         $this->data['totalOptionID'] = 0;
+        // var_dump($this->data['parents']);
+        // exit;
 
         if($_POST !== []) {
             $postOption = inicompute($this->input->post("option"));
@@ -294,7 +300,8 @@ class Question_bank extends Admin_Controller {
                     "create_date" => date("Y-m-d H:i:s"),
                     "modify_date" => date("Y-m-d H:i:s"),
                     "create_userID" => $usertypeID,
-                    "create_usertypeID" => $loginuserID
+                    "create_usertypeID" => $loginuserID,
+                    "tertaut" => $this->input->post('personalquestion') == "on" ? 1 : null
                 );
                 $question_bank['upload'] = $this->upload_data['file']['file_name'];
 
@@ -1097,6 +1104,18 @@ class Question_bank extends Admin_Controller {
             }
         }
         return TRUE;
+    }
+
+    public function sectioncall()
+    {
+        $parentID = $this->input->post('id');
+        if ((int) $parentID !== 0) {
+            $allsection = $this->student_m->get_order_by_student(array('parentID' => $parentID));
+            echo "<option value='0'>", 'Pilihan Relasi', "</option>";
+            foreach ($allsection as $value) {
+                echo "<option value=\"$value->studentID\">", $value->name, "</option>";
+            }
+        }
     }
 
 }

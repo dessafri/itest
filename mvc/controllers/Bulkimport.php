@@ -51,13 +51,19 @@ class Bulkimport extends Admin_Controller {
 
     public function question_bulkimport() {
         if(isset($_FILES["csvQuestion"])) {
-            $config['upload_path']   = "./uploads/csv/";
+            $upload_path = "./uploads/csv/";    
+            // Check if the directory exists, if not create it
+            if (!is_dir($upload_path)) {
+                mkdir($upload_path, 0755, TRUE);
+            }
+            $config['upload_path']   = $upload_path;
             $config['allowed_types'] = 'text/plain|text/csv|csv';
             $config['max_size']      = '2048';
             $config['file_name']     = $_FILES["csvQuestion"]['name'];
             $config['overwrite']     = TRUE;
             $this->load->library('upload', $config);
             if(!$this->upload->do_upload("csvQuestion")) {
+                $this->upload->display_errors();
                 $this->session->set_flashdata('error', $this->lang->line('bulkimport_upload_fail'));
                 redirect(base_url("bulkimport/index"));
             } else {

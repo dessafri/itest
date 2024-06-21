@@ -1,10 +1,10 @@
 <div class="box">
     <div class="box-header">
-        <h3 class="box-title"><i class="fa icon-student"></i> <?=$this->lang->line('panel_title')?></h3>
+        <h3 class="box-title"><i class="fa icon-student"></i> Employee</h3>
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
             <li><a href="<?=base_url("student/index")?>"><?=$this->lang->line('menu_student')?></a></li>
-            <li class="active"><?=$this->lang->line('menu_add')?> <?=$this->lang->line('panel_title')?></li>
+            <li class="active"><?=$this->lang->line('menu_add')?> Employee</li>
         </ol>
     </div><!-- /.box-header -->
     <!-- form start -->
@@ -26,11 +26,11 @@
 
                     <div class="form-group <?=form_error('guargianID') ? 'has-error' : ''?>">
                         <label for="guargianID" class="col-sm-2 control-label">
-                            <?=$this->lang->line("student_guargian")?>
+                            Perusahaan
                         </label>
                         <div class="col-sm-6">
                             <?php
-                                $array = array('0' => $this->lang->line('student_select_guargian'));
+                                $array = array('0' => 'Pilih Perusahaan');
                                 foreach ($parents as $parent) {
                                     $parentsemail = '';
                                     if($parent->email) {
@@ -51,11 +51,10 @@
                         </label>
                         <div class="col-sm-6">
                             <?php
-                                $array = array('0' => $this->lang->line('student_select_guargian'));
                                 foreach ($students as $student) {
                                     $array[$student->studentID] = $student->name;
                                 }
-                                echo form_multiselect("AtasanID[]", $array, set_value("AtasanID"), "id='AtasanID' class='form-control guargianID select2'");
+                                echo form_multiselect("AtasanID[]", $array, [], "id='AtasanID' class='form-control atasanID select2'");
                             ?>
                         </div>
                         <span class="col-sm-4 control-label">
@@ -68,11 +67,10 @@
                         </label>
                         <div class="col-sm-6">
                             <?php
-                                $array = array('0' => $this->lang->line('student_select_guargian'));
                                 foreach ($students as $student) {
                                     $array[$student->studentID] = $student->name;
                                 }
-                                echo form_multiselect("RekananID[]", $array, set_value("RekananID"), "id='RekananID' class='form-control guargianID select2'");
+                                echo form_multiselect("RekananID[]", $array, [], "id='RekananID' class='form-control guargianID select2'");
                             ?>
                         </div>
                         <span class="col-sm-4 control-label">
@@ -85,11 +83,10 @@
                         </label>
                         <div class="col-sm-6">
                             <?php
-                                $array = array('0' => $this->lang->line('student_select_guargian'));
                                 foreach ($students as $student) {
                                     $array[$student->studentID] = $student->name;
                                 }
-                                echo form_multiselect("BawahanID[]", $array, set_value("BawahanID"), "id='BawahanID' class='form-control guargianID select2'");
+                                echo form_multiselect("BawahanID[]", $array, [], "id='BawahanID' class='form-control guargianID select2'");
                             ?>
                         </div>
                         <span class="col-sm-4 control-label">
@@ -294,7 +291,7 @@
                         </span>
                     </div>
 
-                    <div class="form-group <?=form_error('optionalSubjectID') ? ' has-error' : ''  ?>">
+                    <div class="form-group <?=form_error('optionalSubjectID') ? ' has-error' : ''  ?>" style="display: none;">
                         <label for="optionalSubjectID" class="col-sm-2 control-label">
                             <?=$this->lang->line("student_optionalsubject")?>
                         </label>
@@ -366,7 +363,7 @@
                         </span>
                     </div>
 
-                    <div class="form-group <?=form_error('extraCurricularActivities') ? ' has-error' : ''  ?>">
+                    <div class="form-group <?=form_error('extraCurricularActivities') ? ' has-error' : ''  ?>" style="display: none;">
                         <label for="extraCurricularActivities" class="col-sm-2 control-label">
                             <?=$this->lang->line("student_extracurricularactivities")?>
                         </label>

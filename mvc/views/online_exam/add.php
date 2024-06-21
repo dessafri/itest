@@ -73,7 +73,53 @@
                             <?php echo form_error('usertype'); ?>
                         </span>
                     </div>
-
+                    
+                    <?php
+                    if(form_error('classes'))
+                        echo "<div class='form-group has-error' >";
+                    else
+                        echo "<div class='form-group' >";
+                    ?>
+                        <label for="classes" class="col-sm-2 control-label">
+                            Perusahaan
+                        </label>
+                        <div class="col-sm-6">
+                            <?php
+                            $array = array(0 =>'Pilih Perusahaan');
+                            foreach ($parents as $parent) {
+                                $array[$parent->parentsID] = $parent->name;
+                            }
+                            echo form_dropdown("organisasi", $array, set_value("organisasi",0), "id='organisasi' class='form-control select2'");
+                            ?>
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('classes'); ?>
+                        </span>
+                    </div>
+                    <?php
+                    if(form_error('classes'))
+                        echo "<div class='form-group has-error' >";
+                    else
+                        echo "<div class='form-group' >";
+                    ?>
+                        <label for="classes" class="col-sm-2 control-label">
+                            Group Exam
+                        </label>
+                        <div class="col-sm-6">
+                            <?php
+                            $array = array(0 => 'Pilih Group Exam');
+                            if(inicompute($groupsquestion)) {
+                                foreach ($groupsquestion as $group) {
+                                    $array[$group->questionGroupID] = $group->title;
+                                }
+                            }
+                            echo form_dropdown("groupID", $array, set_value("groupID"), "id='groupID' class='form-control select2'");
+                            ?>
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('groupID'); ?>
+                        </span>
+                    </div>
                     <?php
                     if(form_error('classes'))
                         echo "<div class='form-group has-error' >";
@@ -561,7 +607,25 @@
 
 <script type="text/javascript">
     $('.select2').select2();
-
+    $('#organisasi').change(function(event) {
+    var organisasiID = $(this).val();
+    console.log(organisasiID);
+    if(organisasiID === '0') {
+        $('#sectionID').val(0);
+    } else {
+        console.log(organisasiID)
+        $.ajax({
+            async: false,
+            type: 'POST',
+            url: "<?=base_url('question_bank/sectioncall')?>",
+            data: "id=" + organisasiID,
+            dataType: "html",
+            success: function(data) {
+               $('#relasi').html(data);
+            }
+        });
+    }
+});
 
     $(document).ready(function() {
         var type = "<?=$posttype?>";

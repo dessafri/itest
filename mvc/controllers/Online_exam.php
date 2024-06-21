@@ -11,6 +11,7 @@ class Online_exam extends Admin_Controller
     public $input;
     public $online_exam_m;
     public $uri;
+    public $parents_m;
     public $online_exam_question_m;
     public $question_option_m;
     public $question_answer_m;
@@ -37,6 +38,7 @@ class Online_exam extends Admin_Controller
         $this->load->model("subject_m");
         $this->load->model("studentgroup_m");
         $this->load->model("usertype_m");
+        $this->load->model("parents_m");
         $this->load->model("exam_type_m");
         $this->load->model("question_bank_m");
         $this->load->model("question_level_m");
@@ -282,6 +284,8 @@ class Online_exam extends Admin_Controller
         $this->data['instructions'] = $this->instruction_m->get_order_by_instruction();
         $this->data['types'] = $this->exam_type_m->get_order_by_exam_type(['status' => 1]);
         $this->data['groups'] = $this->studentgroup_m->get_order_by_studentgroup();
+        $this->data['groupsquestion']    = $this->question_group_m->get_order_by_question_group();
+        $this->data['parents']     = $this->parents_m->get_parents();
         $this->data['userTypeID'] = 3;
         $this->data['sections'] = array();
         $this->data['subjects'] = array();
@@ -350,6 +354,9 @@ class Online_exam extends Admin_Controller
                 $array['random']              = $this->input->post('randomQuestion');
                 $array['showMarkAfterExam']   = $this->input->post('showMarkAfterExam');
                 $array['showResultAfterExam'] = $this->input->post('showResultAfterExam');
+                // $array["relasi_jabatan"] = $this->input->post('relasi');
+                $array["organisasiID"] = $this->input->post('organisasi');
+                $array["groupID"] = $this->input->post('groupID');
                 $this->online_exam_m->insert_online_exam($array);
                 $this->session->set_flashdata('success', $this->lang->line('menu_success'));
                 redirect(base_url("online_exam/index"));

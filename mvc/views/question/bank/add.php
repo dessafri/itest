@@ -45,7 +45,7 @@ if (form_error('level')) {
 
 ?>
                         <label for="level" class="col-sm-2 control-label">
-                            <?=$this->lang->line("question_bank_level")?> <span class='text-red'>*</span>
+                            Question Sub Type <span class='text-red'>*</span>
                         </label>
                         <div class="col-sm-6">
                             <?php
@@ -69,6 +69,30 @@ if (form_error('question')) {
 }
 
 ?>
+                        <label for="hints" class="col-sm-2 control-label">
+                            Pertanyaan Personal
+                        </label>
+                        <div class="col-sm-6">
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="hints" name="personalquestion">
+    </div>
+</div>
+
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('personalquestion'); ?>
+                        </span>
+                    </div>
+
+                    <?php
+if (form_error('mark')) {
+    echo "<div class='form-group has-error' >";
+} else {
+    echo "<div class='form-group' >";
+}
+
+?>
+                        
+
                         <label for="question" class="col-sm-2 control-label">
                             <?=$this->lang->line("question_bank_question")?> <span class='text-red'>*</span>
                         </label>
@@ -238,6 +262,24 @@ echo form_dropdown("totalOption", $array, set_value("totalOption"), "id='totalOp
 
 <script type="text/javascript">
     $('.select2').select2();
+    $('#organisasi').change(function(event) {
+    var organisasiID = $(this).val();
+    if(organisasiID === '0') {
+        $('#sectionID').val(0);
+    } else {
+        console.log(organisasiID)
+        $.ajax({
+            async: false,
+            type: 'POST',
+            url: "<?=base_url('question_bank/sectioncall')?>",
+            data: "id=" + organisasiID,
+            dataType: "html",
+            success: function(data) {
+               $('#relasi').html(data);
+            }
+        });
+    }
+});
     $(document).on('click', '#close-preview', function(){
         $('.image-preview').popover('hide');
         // Hover befor close the preview
@@ -384,7 +426,7 @@ echo form_dropdown("totalOption", $array, set_value("totalOption"), "id='totalOp
          + '<div class="col-sm-2" style="display:inline-table">'
          + '<input type="number" class="form-control" required id="number' + id + '" name="numberanswer[]" value="" placeholder="Nilai Jawaban">'
          + '</div>'
-         + '<span class="col-sm-3 control-label text-red" id="anserror' + id + '"><?php if(isset($form_validation["answer1"])) { echo $form_validation["answer1"]; } ?></span>'
+         + '<span class="col-sm-3 control-label text-red" id="anserror' + id + '"><?php if (isset($form_validation["answer1"])) {echo $form_validation["answer1"];}?></span>'
          + '</div>';
 
             return html;

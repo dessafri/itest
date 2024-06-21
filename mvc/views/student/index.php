@@ -1,16 +1,15 @@
 <div class="box">
     <div class="box-header">
-        <h3 class="box-title"><i class="fa icon-student"></i> <?=$this->lang->line('panel_title')?></h3>
+        <h3 class="box-title"><i class="fa icon-student"></i> Employee</h3>
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-            <li class="active"><?=$this->lang->line('menu_student')?></li>
+            <li class="active">Employee</li>
         </ol>
     </div><!-- /.box-header -->
     <!-- form start -->
     <div class="box-body">
         <div class="row">
             <div class="col-sm-12">
-
                 <h5 class="page-header">
                     <?php
                         $usertype = $this->session->userdata("usertype");
@@ -18,7 +17,7 @@
                     ?>
                         <a href="<?php echo base_url('student/add') ?>">
                             <i class="fa fa-plus"></i>
-                            <?=$this->lang->line('add_title')?>
+                            Tambah Employee
                         </a>
                     <?php } ?>
                     <div class="col-lg-2 col-sm-2 col-md-2 col-xs-12 pull-right drop-marg">
@@ -38,9 +37,9 @@
                 <?php if(inicompute($students) > 0 ) { ?>
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#all" aria-expanded="true"><?=$this->lang->line("student_all_students")?></a></li>
+                            <li class="active"><a data-toggle="tab" href="#all" aria-expanded="true">All Employee</a></li>
                             <?php foreach ($sections as $key => $section) {
-                                echo '<li class=""><a data-toggle="tab" href="#tab'.$section->classesID.$section->sectionID .'" aria-expanded="false">'. $this->lang->line("student_section")." ".$section->section. " ( ". $section->category." )".'</a></li>';
+                                echo '<li class=""><a data-toggle="tab" href="#tab'.$section->classesID.$section->sectionID .'" aria-expanded="false">'. 'Employee'." ".$section->section. " ( ". $section->category." )".'</a></li>';
                             } ?>
                         </ul>
 
@@ -164,7 +163,7 @@
                                     </div>
                             <?php } ?>
                         </div>
-                    </div> <!-- nav-tabs-custom -->
+                    </div>
                 <?php } else { ?>
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">

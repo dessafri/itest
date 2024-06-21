@@ -1,6 +1,6 @@
 <div class="box">
     <div class="box-header">
-        <h3 class="box-title"><i class="fa iniicon-idcardreport"></i> Report Penilaian</h3>
+        <h3 class="box-title"><i class="fa iniicon-idcardreport"></i> <?=$this->lang->line('panel_title')?></h3>
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
             <li class="active"> <?=$this->lang->line('menu_idcardreport')?></li>
@@ -11,7 +11,82 @@
         <div class="row">
 
             <div class="col-sm-12">
-                
+                <div class="form-group col-sm-4" id="usertypeIDDiv">
+                    <label for="usertypeID"><?=$this->lang->line("idcardreport_idcard_for")?> <span class="text-red">*</span></label>
+                    <?php
+                        $usertypesArray['0'] = $this->lang->line("idcardreport_please_select");
+                        if(inicompute($usertypes)) {
+                            foreach($usertypes as $usertype) {
+                                if($usertype->usertypeID != 4) {
+                                    $usertypesArray[$usertype->usertypeID] = $usertype->usertype;
+                                }
+                            }
+                        }
+                        echo form_dropdown("usertypeID", $usertypesArray, set_value("usertypeID"), "id='usertypeID' class='form-control select2'");
+                     ?>
+                </div>
+
+
+                <div class="form-group col-sm-4" id="classesDiv">
+                    <label for="classesID"><?=$this->lang->line("idcardreport_class")?> <span class="text-red">*</span></label>
+                    <?php
+                        $classesArray['0'] = $this->lang->line("idcardreport_please_select");
+                        if(inicompute($classes)) {
+                            foreach ($classes as $classaKey => $classa) {
+                                $classesArray[$classa->classesID] = $classa->classes;
+                            }
+                        }
+                        echo form_dropdown("classesID", $classesArray, set_value("classesID"), "id='classesID' class='form-control select2'");
+                     ?>
+                </div>
+
+                <div class="form-group col-sm-4" id="sectionDiv">
+                    <label for="sectionID" ><?=$this->lang->line("idcardreport_section")?></label>
+                    <?php
+                        $sectionArray = array(
+                            "0" => $this->lang->line("idcardreport_please_select"),
+                        );
+                        echo form_dropdown("sectionID", $sectionArray, set_value("sectionID"), "id='sectionID' class='form-control select2'");
+                     ?>
+                </div>
+
+                <div class="form-group col-sm-4" id="userDiv">
+                    <label id="userDivlabel" for="userID"><?=$this->lang->line("idcardreport_user")?></label>
+                    <?php
+                        $userArray['0'] = $this->lang->line("idcardreport_please_select");
+                        echo form_dropdown("userID", $userArray, set_value("userID"), "id='userID' class='form-control select2'");
+                     ?>
+                </div>
+
+                <div class="form-group col-sm-4" id="typeDiv">
+                    <label for="type"><?=$this->lang->line("idcardreport_type")?> <span class="text-red">*</span></label>
+                    <?php
+                        $typeArray = array(
+                            '0' => $this->lang->line("idcardreport_please_select"),
+                            '1' => $this->lang->line("idcardreport_frontpart"),
+                            '2' => $this->lang->line("idcardreport_backpart"),
+                        );
+                        echo form_dropdown("type", $typeArray, set_value("type"), "id='type' class='form-control select2'");
+                     ?>
+                </div>
+
+                <div class="form-group col-sm-4" id="backgroundDiv">
+                    <label for="background"><?=$this->lang->line("idcardreport_background")?> <span class="text-red">*</span></label>
+                    <?php
+                        $backgroundArray = array(
+                            '0' => $this->lang->line("idcardreport_please_select"),
+                            '1' => $this->lang->line("idcardreport_yes"),
+                            '2' => $this->lang->line("idcardreport_no"),
+                        );
+                        echo form_dropdown("background", $backgroundArray, set_value("background"), "id='background' class='form-control select2'");
+                     ?>
+                </div>
+
+
+                <div class="col-sm-4">
+                    <button id="get_idcardreport" class="btn btn-success" style="margin-top:23px;"> <?=$this->lang->line("idcardreport_submit")?></button>
+                </div>
+
             </div>
 
         </div><!-- row -->

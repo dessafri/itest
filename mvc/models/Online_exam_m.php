@@ -20,6 +20,8 @@ class Online_exam_m extends MY_Model {
 
     public function get_single_online_exam($array) 
     {
+        $this->db->order_by('onlineExamID', 'DESC');
+        $this->db->limit(1);
         $query = parent::get_single($array);
         return $query;
     }
@@ -53,5 +55,23 @@ class Online_exam_m extends MY_Model {
         $result = $this->db->query($query);
         return $result->row();
     }
+
+    public function get_online_exam_group($data){
+        // Sanitize and prepare the data
+        $data = '%' . strtolower($data) . '%';
+        
+        // Query with binding parameter
+        $query = "SELECT questionGroupID FROM question_group WHERE LOWER(question_group.title) LIKE ?";
+        $result = $this->db->query($query, array($data));
+        
+        // Return the result
+        return $result->row();
+    }
+     
+    public function get_online_exam_by_group($data){
+        $query = "SELECT * FROM online_exam WHERE groupID = '$data'";
+        $result = $this->db->query($query);
+        return $result->row();
+    } 
 
 }

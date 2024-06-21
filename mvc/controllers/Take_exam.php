@@ -21,6 +21,8 @@ class Take_exam extends Admin_Controller
     public $db;
     public $question_bank_m;
     public $question_option_m;
+    public $question_level_report_m;
+    public $relasi_jabatan_m;
     public $question_answer_m;
     public $online_exam_user_answer_m;
     public $online_exam_user_answer_option_m;
@@ -54,6 +56,8 @@ class Take_exam extends Admin_Controller
         $this->load->model('instruction_m');
         $this->load->model('question_bank_m');
         $this->load->model('question_option_m');
+        $this->load->model('question_level_report_m');
+        $this->load->model('relasi_jabatan_m');
         $this->load->model('question_answer_m');
         $this->load->model('online_exam_user_answer_m');
         $this->load->model('online_exam_user_status_m');
@@ -68,8 +72,8 @@ class Take_exam extends Admin_Controller
         $language = $this->session->userdata('lang');
         $this->lang->load('take_exam', $language);
 
-        $this->payment_gateway       = new PaymentGateway();
-        $this->payment_gateway_array = pluck($this->payment_gateway_m->get_order_by_payment_gateway(['status' => 1]), 'status', 'slug');
+        // $this->payment_gateway       = new PaymentGateway();
+        // $this->payment_gateway_array = pluck($this->payment_gateway_m->get_order_by_payment_gateway(['status' => 1]), 'status', 'slug');
     }
 
     public function index()
@@ -106,6 +110,8 @@ class Take_exam extends Admin_Controller
         }
 
         $this->data['payment_settings'] = $this->payment_gateway_m->get_order_by_payment_gateway(['status' => 1]);
+        $user_id = $this->session->userdata('loginuserID');
+        $this->data['relasi_jabatan'] = $this->relasi_jabatan_m->general_get_student_with_relation($user_id);
         $this->data['payment_options']  = pluck($this->payment_gateway_option_m->get_payment_gateway_option(), 'payment_value', 'payment_option');
 
         $this->data['payments']         = pluck_multi_array($this->online_exam_payment_m->get_order_by_online_exam_payment([
@@ -123,7 +129,12 @@ class Take_exam extends Admin_Controller
             'usertypeID' => $usertypeID,
             'published'  => 1
         ]);
-
+        $idQuestionAtasan = $this->online_exam_m->get_online_exam_group('atasan');
+        $idQuestionBawahan = $this->online_exam_m->get_online_exam_group('bawahan');
+        $idQuestionRekanan = $this->online_exam_m->get_online_exam_group('rekanan');
+        $this->data['examAtasan'] = $this->online_exam_m->get_single_online_exam(['groupID' => $idQuestionAtasan->questionGroupID]);
+        $this->data['examBawahan'] = $this->online_exam_m->get_single_online_exam(['groupID' => $idQuestionBawahan->questionGroupID]);
+        $this->data['examRekanan'] = $this->online_exam_m->get_single_online_exam(['groupID' => $idQuestionRekanan->questionGroupID]);
         $this->data['validationErrors']       = [];
         $this->data['validationOnlineExamID'] = 0;
         if ($_POST !== []) {
@@ -171,7 +182,7 @@ class Take_exam extends Admin_Controller
 
         $userID       = $this->session->userdata("loginuserID");
         $onlineExamID = htmlentities((string) escapeString($this->uri->segment(3)));
-
+        $relasi = $this->uri->segment(4);
         $examGivenStatus     = FALSE;
         $examGivenDataStatus = FALSE;
         $examExpireStatus    = FALSE;
@@ -343,6 +354,9 @@ class Take_exam extends Admin_Controller
                     if (inicompute($allOnlineExamQuestions)) {
                         foreach ($allOnlineExamQuestions as $aoeq) {
                             if (isset($questionsBank[$aoeq->questionID])) {
+                                if($questionsBank[$aoeq->questionID]->typeNumber == 4){
+                                    $totalQuestionMark -= $questionsBank[$aoeq->questionID]->mark;
+                                }
                                 $totalQuestionMark += $questionsBank[$aoeq->questionID]->mark;
                             }
                         }
@@ -377,7 +391,9 @@ class Take_exam extends Admin_Controller
                                     'onlineExamQuestionID' => $onlineExamQuestionID,
                                     'userID'               => $userID,
                                     'onlineExamID'         => $onlineExamID,
-                                    'examtimeID'           => $examTimeCounter
+                                    'examtimeID'           => $examTimeCounter,
+                                    'relasi_jabatan'       => $relasi,
+
                                 ]);
                             }
 
@@ -495,6 +511,7 @@ class Take_exam extends Admin_Controller
                         'totalObtainedMark'  => $totalCorrectMark,
                         'totalPercentage'    => (($totalCorrectMark > 0 && $totalQuestionMark > 0) ? (($totalCorrectMark / $totalQuestionMark) * 100) : 0),
                         'statusID'           => $statusID,
+                        'relasi_jabatan'       => $relasi,
                     ]);
 
                     if ($this->data['onlineExam']->paid) {
@@ -521,7 +538,8 @@ class Take_exam extends Admin_Controller
                             $givenTimes[$allUserExam->onlineExamID] = $allExams[$allUserExam->onlineExamID];
                         }
                     }
-
+                    $resultAnswer = $this->question_level_report_m->compute_jawaban($userID,$onlineExamID);
+                    $this->question_level_report_m->insert_batch_question_level_report($resultAnswer);
                     $this->data['showResult']        = $givenTimes;
                     $this->data['fail']              = $f;
                     $this->data['questionStatus']    = $questionStatus;
@@ -534,7 +552,7 @@ class Take_exam extends Admin_Controller
                     $this->data["subview"]           = "online_exam/take_exam/result";
                     return $this->load->view('_layout_main', $this->data);
                 }
-                if ($examGivenStatus) {
+                if ($examGivenStatus || $userExamCheck[$onlineExamID]->relasi_jabatan != $relasi) {
                     $this->data["subview"] = "online_exam/take_exam/question";
                     return $this->load->view('_layout_main', $this->data);
                 } elseif ($examGivenDataStatus) {
@@ -550,7 +568,8 @@ class Take_exam extends Admin_Controller
                     $this->data['online_exam']       = $online_exam;
                     $this->data["subview"]           = "online_exam/take_exam/expireandupcoming";
                     return $this->load->view('_layout_main', $this->data);
-                } else {
+                } 
+                else {
                     $this->data['examsubjectstatus'] = $examSubjectStatus;
                     $this->data['expirestatus']      = $examExpireStatus;
                     $this->data['upcomingstatus']    = TRUE;
@@ -632,12 +651,13 @@ class Take_exam extends Admin_Controller
     public function instruction() //done
     {
         $onlineExamID = htmlentities((string) escapeString($this->uri->segment(3)));
+        $atasan = $this->uri->segment(4);
         if ((int)$onlineExamID !== 0) {
             $instructions             = pluck($this->instruction_m->get_order_by_instruction(), 'obj', 'instructionID');
             $onlineExam               = $this->online_exam_m->get_single_online_exam(['onlineExamID' => $onlineExamID]);
             $this->data['onlineExam'] = $onlineExam;
             if (!isset($instructions[$onlineExam->instructionID])) {
-                redirect(base_url('take_exam/show/' . $onlineExamID));
+                redirect(base_url('take_exam/show/' . $onlineExamID.'/'.$atasan));
             }
             $this->data['instruction'] = $instructions[$onlineExam->instructionID];
             $this->data["subview"]     = "online_exam/take_exam/instruction";

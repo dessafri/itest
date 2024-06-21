@@ -95,7 +95,7 @@
                                                         <td>
                                                             <input id="option<?= $option->optionID ?>" value="<?= $option->optionID ?>"
                                                                 name="answer[<?= $question->typeNumber ?>][<?= $question->questionBankID ?>][]"
-                                                                type="<?= $question->typeNumber == 1 ? 'radio' : 'checkbox' ?>">
+                                                                type="<?= ($question->typeNumber == 1 || $question->typeNumber == 4) ? 'radio' : '' ?>">
                                                             <label for="option<?= $option->optionID ?>">
                                                                 <span
                                                                     class="fa-stack <?= $question->typeNumber == 1 ? 'radio-button' : 'checkbox-button' ?>">
@@ -176,7 +176,7 @@
 
     <div class="col-sm-5">
         <div class="row">
-            <div class="col-sm-12 counterDiv">
+            <div class="col-sm-12 counterDiv" style="display: none;">
                 <div class="box outheBoxShadow">
                     <div class="box-body outheMargAndBox">
                         <div class="box outheBoxShadow">
@@ -192,7 +192,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-12 counterDiv">
+            <div class="col-sm-12 counterDiv" style="display: none;">
                 <div class="box outheBoxShadowColor">
                     <div class="box-body innerMargAndBox">
                         <div class="row">

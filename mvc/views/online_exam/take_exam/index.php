@@ -11,141 +11,29 @@
     <div class="box-body">
         <div class="row">
             <div class="col-sm-12">
-                <div id="hide-table">
-                    <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
-                        <thead>
-                        <tr>
-                            <th class="col-sm-1"><?=$this->lang->line('slno')?></th>
-                            <th class="col-sm-3"><?=$this->lang->line('take_exam_name')?></th>
-                            <th class="col-sm-2"><?=$this->lang->line('take_exam_status')?></th>
-                            <th class="col-sm-1"><?=$this->lang->line('take_exam_duration')?></th>
-                            <th class="col-sm-1"><?=$this->lang->line('take_exam_payment')?></th>
-                            <th class="col-sm-2"><?=$this->lang->line('take_exam_cost')?></th>
-                            <th class="col-sm-2"><?=$this->lang->line('action')?></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <?php if(inicompute($onlineExams)) { $i = 0; foreach($onlineExams as $onlineExam) {
-                            if($usertypeID == '3') {
-                                if((($student->classesID == $onlineExam->classID) || ($onlineExam->classID == '0')) && (($student->sectionID == $onlineExam->sectionID) || ($onlineExam->sectionID == '0')) && (($student->studentgroupID == $onlineExam->studentGroupID) || ($onlineExam->studentGroupID == '0')) && (($onlineExam->subjectID == '0') || (in_array($onlineExam->subjectID, $userSubjectPluck)))) { $i++;
-
-                                    $currentdate = 0;
-                                    if($onlineExam->examTypeNumber == '4') {
-                                        $presentDate = strtotime(date('Y-m-d'));
-                                        $examStartDate = strtotime($onlineExam->startDateTime);
-                                        $examEndDate = strtotime($onlineExam->endDateTime);
-                                    } elseif($onlineExam->examTypeNumber == '5') {
-                                        $presentDate = strtotime(date('Y-m-d H:i:s'));
-                                        $examStartDate = strtotime($onlineExam->startDateTime);
-                                        $examEndDate = strtotime($onlineExam->endDateTime);
-                                    }
-
-                                    $lStatusRunning = FALSE;
-                                    $lStatusExpire = FALSE;
-                                    $lStatusTaken = FALSE;
-                                    $lStatusTodayOnly = FALSE;
-                                    $paymentExpireStatus = FALSE;
-
-                                    $examLabel = $this->lang->line('take_exam_anytime');
-                                    if($onlineExam->examTypeNumber == '4' || $onlineExam->examTypeNumber == '5') {
-                                        if($presentDate < $examStartDate) {
-                                            $examLabel = $this->lang->line('take_exam_upcoming');
-                                        } elseif($presentDate > $examStartDate && $presentDate < $examEndDate) {
-                                            $examLabel = $this->lang->line('take_exam_running');
-                                            $lStatusRunning = TRUE;
-                                        } elseif($presentDate == $examStartDate && $presentDate == $examEndDate) {
-                                            $examLabel = $this->lang->line('take_exam_today_only');
-                                            $lStatusTodayOnly = TRUE;
-                                        } elseif($presentDate > $examStartDate && $presentDate > $examEndDate) {
-                                            $examLabel = $this->lang->line('take_exam_expired');
-                                            $lStatusExpire = TRUE;
-                                        }
-
-                                        if($presentDate > $examStartDate && $presentDate > $examEndDate) {
-                                            $paymentExpireStatus = TRUE;
-                                        }
-                                    } else {
-                                        $lStatusRunning = TRUE;
-                                    }
-
-                                    if($lStatusRunning) {
-                                        if(isset($examStatus[$onlineExam->onlineExamID])) {
-                                            $examLabel = $this->lang->line('take_exam_taken');
-                                            $lStatusTaken = TRUE;
-                                        }
-                                    } elseif($lStatusExpire) {
-                                        if(isset($examStatus[$onlineExam->onlineExamID])) {
-                                            $examLabel = $this->lang->line('take_exam_taken');
-                                            $lStatusTaken = TRUE;
-                                        }
-                                    } elseif($lStatusTodayOnly) {
-                                        if(isset($examStatus[$onlineExam->onlineExamID])) {
-                                            $examLabel = $this->lang->line('take_exam_taken');
-                                            $lStatusTaken = TRUE;
-                                        }
-                                    }
-
-                                    if($lStatusExpire) {
-                                        $examLabel = $this->lang->line('take_exam_expired');
-                                    } else {
-                                        if($lStatusTaken) {
-                                            if($onlineExam->examStatus == 2) {
-                                                $examLabel = $this->lang->line('take_exam_retaken');
-                                            }
-                                        }
-                                    }
-                                ?>
-                                <tr>
-                                    <td data-title="<?=$this->lang->line('slno')?>">
-                                        <?php echo $i; ?>
-                                    </td>
-                                    <td data-title="<?=$this->lang->line('take_exam_name')?>">
-                                        <?php if(strlen($onlineExam->name) > 50) {
-                                            echo strip_tags(substr($onlineExam->name, 0, 50)."...");
-                                        } else {
-                                            echo strip_tags(substr($onlineExam->name, 0, 50));
-                                        } ?>
-                                        -
-                                        <?php 
-                                            echo $examLabel;                                           
-                                        ?>
-                                    </td>
-                                    <td data-title="<?=$this->lang->line('take_exam_status')?>">
-                                        <?php 
-                                            if($onlineExam->examStatus == 1) {
-                                                echo $this->lang->line('take_exam_one_time');
-                                            } elseif($onlineExam->examStatus == 2) {
-                                                echo $this->lang->line('take_exam_multiple_time');
-                                            }
-                                        ?>
-                                    </td>
-                                    <td data-title="<?=$this->lang->line('take_exam_duration')?>">
-                                        <?php echo $onlineExam->duration; ?>
-                                    </td>
-                                    <td data-title="<?=$this->lang->line('take_exam_payment')?>">
-                                        <?=($onlineExam->paid == 1) ? $this->lang->line('take_exam_paid') : $this->lang->line('take_exam_free') ;?>
-                                    </td> 
-                                    <td data-title="<?=$this->lang->line('take_exam_cost')?>">
-                                        <?=($onlineExam->paid == 1) ? number_format($onlineExam->cost, '2') : number_format($onlineExam->cost, '2');?> <?=$siteinfos->currency_code?>
-                                    </td>
-                                    <td data-title="<?=$this->lang->line('action')?>">
-                                        <?php
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tab1" aria-expanded="true">Atasan</a></li>
+                    <li><a data-toggle="tab" href="#tab2" aria-expanded="false">Rekanan</a></li>
+                    <li><a data-toggle="tab" href="#tab3" aria-expanded="false">Bawahan</a></li>
+                </ul>
+                <?php
                                             $paidStatus = 0;
-                                            if($onlineExam->paid == 1) {
-                                                if(isset($paindingpayments[$onlineExam->onlineExamID])) {
+                                            if($examAtasan->paid == 1) {
+                                                if(isset($paindingpayments[$examAtasan->onlineExamID])) {
                                                     $paidStatus = 1;
                                                 } else {
                                                     if($paymentExpireStatus) {
                                                         $paidStatus = 1;
                                                     } else {
-                                                        if($onlineExam->examStatus == 1) {
-                                                            if(isset($examStatus[$onlineExam->onlineExamID])) {
+                                                        if($examAtasan->examStatus == 1) {
+                                                            if(isset($examStatus[$examAtasan->onlineExamID])) {
                                                                 $paidStatus = 1;
                                                             } else {
                                                                 $paidStatus = 0;
                                                             }
                                                         } else {
-                                                            if(isset($paindingpayments[$onlineExam->onlineExamID])) {
+                                                            if(isset($paindingpayments[$examAtasan->onlineExamID])) {
                                                                 $paidStatus = 1;
                                                             } else {
                                                                 $paidStatus = 0;
@@ -157,24 +45,90 @@
                                                 $paidStatus = 1;
                                             }
                                         ?>
-                                        <button class="btn btn-success btn-xs mrg" onclick="newPopup('<?=base_url('take_exam/instruction/'.$onlineExam->onlineExamID)?>', '<?=$paidStatus?>', '<?=$onlineExam->onlineExamID?>')" rel="tooltip" data-toggle="tooltip" data-placement="top" data-original-title="<?=$this->lang->line('panel_title')?>"><i class="fa fa-columns"></i></button>
-
-                                        <?php
-                                            if($onlineExam->paid && ($onlineExam->examStatus == 2) && !($paymentExpireStatus))  {
-                                                echo '<a href="#addpayment" id="'.$onlineExam->onlineExamID.'" class="btn btn-primary btn-xs mrg getpaymentinfobtn" rel="tooltip" data-toggle="modal"><i class="fa fa-credit-card" data-toggle="tooltip" data-placement="top" data-original-title="'.$this->lang->line('take_exam_add_payment').'"></i></a>';
-                                            } elseif($onlineExam->paid && !($lStatusTaken) && !isset($payments[$onlineExam->onlineExamID]) && !($paymentExpireStatus)) {
-                                                echo '<a href="#addpayment" id="'.$onlineExam->onlineExamID.'" class="btn btn-primary btn-xs mrg getpaymentinfobtn" rel="tooltip" data-toggle="modal"><i class="fa fa-credit-card" data-toggle="tooltip" data-placement="top" data-original-title="'.$this->lang->line('take_exam_add_payment').'"></i></a>';
-                                            }
-
-                                            if($onlineExam->paid) {
-                                                echo '<a href="#payment-list" id="'.$onlineExam->onlineExamID.'" class="btn btn-info btn-xs mrg getpaymentlistinfobtn" rel="tooltip" data-toggle="modal"><i class="fa fa-list-ul" data-toggle="tooltip" data-placement="top" data-original-title="'.$this->lang->line('take_exam_view_payments').'"></i></a>';
-                                            }
-                                        ?>
-                                    </td>
-                                </tr>
-                            <?php } } } } ?>
-                        </tbody>
-                    </table>
+                <div class="tab-content">
+                    <div id="tab1" class="tab-pane active">
+                        <div id="hide-table">
+                        <div class="row">
+                            <?php foreach ($relasi_jabatan as $row): ?>
+                                <?php if ($row->keterangan == 'Atasan'): ?>
+                                    <div class="col-md-4" style="margin-top: 20px;">
+                                        <div class="panel panel-default" style="background-color: #23292F">
+                                            <div class="panel-body">
+                                                <h5 class="panel-title" style="margin-bottom: 40px; color: white;"><?php echo $row->name; ?></h5>
+                                                <?php
+                                                if ($examAtasan->published == 1) {
+                                                    $url = base_url('take_exam/instruction/' . $examAtasan->onlineExamID . '/' . $row->Id);
+                                                    $paidStatus = htmlspecialchars($paidStatus, ENT_QUOTES, 'UTF-8');
+                                                    $onlineExamID = htmlspecialchars($examAtasan->onlineExamID, ENT_QUOTES, 'UTF-8');
+                                                    echo "<button onclick=\"newPopup('$url', '$paidStatus', '$onlineExamID','$row->Id')\" class=\"btn btn-warning\"><i class=\"fa fa-pencil\"></i> Nilai</button>";
+                                                } else {
+                                                    echo "<button class='btn btn-disabled' disabled><i class='fa fa-pencil'></i> Nilai</button>";
+                                                }
+                                                ?>     
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
+                        </div>
+                    </div>
+                    <div id="tab2" class="tab-pane">
+                        <div id="hide-table">
+                            <!-- Content for Rekanan tab -->
+                            <div class="row">
+                            <?php foreach ($relasi_jabatan as $row): ?>
+                                <?php if ($row->keterangan == 'Rekanan'): ?>
+                                    <div class="col-md-4" style="margin-top: 20px;">
+                                        <div class="panel panel-default" style="background-color: #23292F">
+                                            <div class="panel-body">
+                                                <h5 class="panel-title" style="margin-bottom: 40px; color: white;"><?php echo $row->name; ?></h5>
+                                                <?php 
+                                                if ($examRekanan->published == 1) {
+                                                    $url = base_url('take_exam/instruction/' . $examRekanan->onlineExamID);
+                                                    $paidStatus = htmlspecialchars($paidStatus, ENT_QUOTES, 'UTF-8');
+                                                    $onlineExamID = htmlspecialchars($examRekanan->onlineExamID, ENT_QUOTES, 'UTF-8');
+                                                    echo "<button onclick=\"newPopup('$url', '$paidStatus', '$onlineExamID','$row->Id')\" class=\"btn btn-warning\"><i class=\"fa fa-pencil\"></i> Nilai</button>";
+                                                } else {
+                                                    echo "<button class='btn btn-disabled' disabled><i class='fa fa-pencil'></i> Nilai</button>";
+                                                }
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
+                        </div>
+                    </div>
+                    <div id="tab3" class="tab-pane">
+                        <div id="hide-table">
+                            <!-- Content for Bawahan tab -->
+                            <div class="row">
+                            <?php foreach ($relasi_jabatan as $row): ?>
+                                <?php if ($row->keterangan == 'Bawahan'): ?>
+                                    <div class="col-md-4" style="margin-top: 20px;">
+                                        <div class="panel panel-default" style="background-color: #23292F">
+                                            <div class="panel-body">
+                                                <h5 class="panel-title" style="margin-bottom: 40px; color: white;"><?php echo $row->name; ?></h5>
+                                                <?php 
+                                                if ($examBawahan->published == 1) {
+                                                    $url = base_url('take_exam/instruction/' . $examBawahan->onlineExamID);
+                                                    $paidStatus = htmlspecialchars($paidStatus, ENT_QUOTES, 'UTF-8');
+                                                    $onlineExamID = htmlspecialchars($examBawahan->onlineExamID, ENT_QUOTES, 'UTF-8');
+                                                    echo "<button onclick=\"newPopup('$url', '$paidStatus', '$onlineExamID','$row->Id')\" class=\"btn btn-warning\"><i class=\"fa fa-pencil\"></i> Nilai</button>";
+                                                } else {
+                                                    echo "<button class='btn btn-disabled' disabled><i class='fa fa-pencil'></i> Nilai</button>";
+                                                }
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -194,7 +148,7 @@
                         <input type="text" name="onlineExamID" id="onlineExamID" style="display:none">
                         <div class="col-sm-6">
                             <div class="col-sm-12">
-                                <div class="form-group <?=form_error('paymentAmount') ? 'has-error' : ''; ?>" id="paymentAmountErrorDiv">
+                                <div class="form-group <?=form_error('paymentAmount') ? 'has-error' : '';?>" id="paymentAmountErrorDiv">
                                     <label for="paymentAmount"><?=$this->lang->line('take_exam_payment_amount')?> <span class="text-red">*</span></label>
                                     <input type="text" class="form-control" id="paymentAmount" name="paymentAmount" readonly="readonly">
                                     <span id="paymentAmountError"><?=form_error('paymentAmount')?></span>
@@ -204,36 +158,36 @@
 
                         <div class="col-sm-6">
                             <div class="col-sm-12">
-                                <div class="form-group <?=form_error('payment_method') ? 'has-error' : ''; ?>" id="payment_method_error_div">
+                                <div class="form-group <?=form_error('payment_method') ? 'has-error' : '';?>" id="payment_method_error_div">
                                     <label for="payment_method"><?=$this->lang->line('take_exam_payment_method')?> <span class="text-red">*</span></label>
                                     <?php
-                                        $payment_method_array['select'] = $this->lang->line('take_exam_select_payment_method');
-                                        if(customCompute($payment_settings)) {
-                                            foreach($payment_settings as $payment_setting) {
-                                                $payment_method_array[$payment_setting->slug] = $payment_setting->name;
-                                            }
-                                        }
-                                        echo form_dropdown("payment_method", $payment_method_array, set_value("payment_method"), "id='payment_method' class='form-control select2'");
-                                    ?>
+$payment_method_array['select'] = $this->lang->line('take_exam_select_payment_method');
+if (customCompute($payment_settings)) {
+    foreach ($payment_settings as $payment_setting) {
+        $payment_method_array[$payment_setting->slug] = $payment_setting->name;
+    }
+}
+echo form_dropdown("payment_method", $payment_method_array, set_value("payment_method"), "id='payment_method' class='form-control select2'");
+?>
                                     <span id="payment_method_error"><?=form_error('payment_method')?></span>
                                 </div>
                             </div>
                         </div>
 
                         <?php
-                        if(inicompute($payment_settings)) {
-                            foreach($payment_settings as $payment_setting) {
-                                if($payment_setting->misc != null) {
-                                    $misc = json_decode($payment_setting->misc);
-                                    if(inicompute($misc->input)) {
-                                        foreach($misc->input as $input) {
-                                            $this->load->view($input);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        ?>
+if (inicompute($payment_settings)) {
+    foreach ($payment_settings as $payment_setting) {
+        if ($payment_setting->misc != null) {
+            $misc = json_decode($payment_setting->misc);
+            if (inicompute($misc->input)) {
+                foreach ($misc->input as $input) {
+                    $this->load->view($input);
+                }
+            }
+        }
+    }
+}
+?>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -276,26 +230,26 @@
 </div>
 
 <?php
-$js_gateway     = [];
+$js_gateway = [];
 $submit_gateway = [];
-if(inicompute($payment_settings)) {
-    foreach($payment_settings as $payment_setting) {
-        if($payment_setting->misc != null) {
+if (inicompute($payment_settings)) {
+    foreach ($payment_settings as $payment_setting) {
+        if ($payment_setting->misc != null) {
             $misc = json_decode($payment_setting->misc);
-            if(inicompute($misc->js)) {
-                foreach($misc->js as $js) {
+            if (inicompute($misc->js)) {
+                foreach ($misc->js as $js) {
                     $this->load->view($js);
                 }
             }
 
-            if(inicompute($misc->input)) {
-                if(isset($misc->input[0])) {
+            if (inicompute($misc->input)) {
+                if (isset($misc->input[0])) {
                     $js_gateway[$payment_setting->slug] = isset($misc->input[0]);
                 }
             }
 
-            if(inicompute($misc->input)) {
-                if(isset($misc->submit) && $misc->submit) {
+            if (inicompute($misc->input)) {
+                if (isset($misc->submit) && $misc->submit) {
                     $submit_gateway[$payment_setting->slug] = $misc->submit;
                 }
             }
@@ -303,7 +257,7 @@ if(inicompute($payment_settings)) {
     }
 }
 
-$js_gateway     = json_encode($js_gateway);
+$js_gateway = json_encode($js_gateway);
 $submit_gateway = json_encode($submit_gateway);
 ?>
 
@@ -328,7 +282,7 @@ $submit_gateway = json_encode($submit_gateway);
         }
     });
 
-    function newPopup(url, paidStatus, onlineExamID) {
+    function newPopup(url, paidStatus, onlineExamID, relasi = null) {
         var myWindowStatus = false;
         if(paidStatus == 1) {
             myWindowStatus = true;
@@ -433,7 +387,7 @@ $submit_gateway = json_encode($submit_gateway);
                     }
                 }
             });
-        }   
+        }
     });
 
     $('.getpaymentlistinfobtn').click(function() {
@@ -449,11 +403,11 @@ $submit_gateway = json_encode($submit_gateway);
                     $('#payment-list-body').append(data);
                 }
             });
-        }   
+        }
     });
 </script>
 
-<?php if(inicompute($validationErrors)) { ?>
+<?php if (inicompute($validationErrors)) {?>
     <script type="application/javascript">
         $(window).load(function() {
             var onlineExamID =  "<?=$validationOnlineExamID?>";
@@ -489,4 +443,4 @@ $submit_gateway = json_encode($submit_gateway);
             }
         });
     </script>
-<?php } ?>
+<?php }?>
