@@ -66,6 +66,7 @@ class Question_group extends Admin_Controller {
             } else {
                 $array = array(
                     "title" => $this->input->post("title"),
+                    "bobot" => $this->input->post("bobot"),
                 );
                 $this->question_group_m->insert_question_group($array);
                 $this->session->set_flashdata('success', $this->lang->line('menu_success'));
@@ -100,7 +101,8 @@ class Question_group extends Admin_Controller {
                         $this->load->view('_layout_main', $this->data);
                     } else {
                         $array = array(
-                            "title" => $this->input->post("title")
+                            "title" => $this->input->post("title"),
+                            "bobot" => $this->input->post("bobot"),
                         );
 
                         $this->question_group_m->update_question_group($array, $id);

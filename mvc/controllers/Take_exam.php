@@ -393,7 +393,6 @@ class Take_exam extends Admin_Controller
                                     'onlineExamID'         => $onlineExamID,
                                     'examtimeID'           => $examTimeCounter,
                                     'relasi_jabatan'       => $relasi,
-
                                 ]);
                             }
 
@@ -415,6 +414,7 @@ class Take_exam extends Admin_Controller
                                             'onlineExamID' => $onlineExamID,
                                             'examtimeID'   => $examTimeCounter,
                                             'userID'       => $userID,
+                                                'relasi_jabatan'       => $relasi,
                                         ]);
                                         if ($getAnswer !== $takeAnswer) {
                                             $f = 0;
@@ -434,6 +434,7 @@ class Take_exam extends Admin_Controller
                                                     'onlineExamID' => $onlineExamID,
                                                     'examtimeID'   => $examTimeCounter,
                                                     'userID'       => $userID,
+                                                'relasi_jabatan'       => $relasi,
                                                 ]);
                                             }
                                             $visited[$typeID][$questionID] = 1;
@@ -459,6 +460,7 @@ class Take_exam extends Admin_Controller
                                                 'onlineExamID' => $onlineExamID,
                                                 'examtimeID'   => $examTimeCounter,
                                                 'userID'       => $userID,
+                                                'relasi_jabatan'       => $relasi,
                                             ]);
                                         }
                                         $visited[$typeID][$questionID] = 1;
@@ -538,7 +540,7 @@ class Take_exam extends Admin_Controller
                             $givenTimes[$allUserExam->onlineExamID] = $allExams[$allUserExam->onlineExamID];
                         }
                     }
-                    $resultAnswer = $this->question_level_report_m->compute_jawaban($userID,$onlineExamID);
+                    $resultAnswer = $this->question_level_report_m->compute_jawaban($userID,$relasi);
                     $this->question_level_report_m->insert_batch_question_level_report($resultAnswer);
                     $this->data['showResult']        = $givenTimes;
                     $this->data['fail']              = $f;

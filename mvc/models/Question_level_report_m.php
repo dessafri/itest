@@ -38,34 +38,66 @@ class Question_level_report_m extends MY_Model
     {
         parent::delete($id);
     }
-    public function compute_jawaban($iduser, $idexam)
+    public function compute_jawaban($iduser,$idrelasi)
     {
-        $query = "SELECT
-    c.levelID AS questionLevelID,
-    CASE
-        WHEN e.title = 'Atasan' THEN SUM(b.nilaijawaban) * 0.5
-        WHEN e.title = 'Bawahan' THEN SUM(b.nilaijawaban) * 0.3
-        WHEN e.title = 'Rekanan' THEN SUM(b.nilaijawaban) * 0.2
+        $query = "SELECT c.levelID AS questionLevelID,c.groupID,a.relasi_jabatan AS userID,CASE
+        WHEN d.title = 'Atasan' THEN SUM(b.nilaijawaban) * 0.5
+        WHEN d.title = 'Bawahan' THEN SUM(b.nilaijawaban) * 0.3
+        WHEN d.title = 'Rekanan' THEN SUM(b.nilaijawaban) * 0.2
         ELSE SUM(b.nilaijawaban)
-    END AS value,
-    d.groupID AS groupID,
-    a.userID AS userID
-    FROM
-        online_exam_user_answer_option a
-    JOIN
-        question_option b ON a.optionID = b.optionID
-    JOIN
-        question_bank c ON b.questionID = c.questionBankID
-    JOIN
-        online_exam d ON a.onlineExamID = d.onlineExamID
-    JOIN
-        question_group e ON d.groupID = e.questionGroupID
-    WHERE
+        END AS value,
+        a.onlineExamID AS examID
+        FROM online_exam_user_answer_option a 
+        JOIN question_option b ON a.optionID = b.optionID
+        JOIN question_bank c ON c.questionBankID = b.questionID
+        JOIN question_group d ON d.questionGroupID = c.groupID 
+        WHERE 
         a.userID = '$iduser'
-        AND a.onlineExamID = '$idexam'
-    GROUP BY
-        c.levelID, d.groupID";
+        AND a.relasi_jabatan = '$idrelasi'
+        GROUP BY c.levelID
+        ";
+                $result = $this->db->query($query);
+                return $result->result_array();
+            }
+    public function report_subtype(){
+    $query = "SELECT
+    userID,
+    groupID,
+    questionLevelID,
+    AVG(value) AS value
+FROM
+    question_level_report
+GROUP BY
+    userID,
+    groupID,
+    questionLevelID;
+";   
+$result = $this->db->query($query);
+return $result->result_array();     
+    }
+    public function end_report(){
+    $query = "SELECT
+            userID,
+            AVG(value) AS nilai_akhir
+        FROM
+            question_level_report
+        GROUP BY
+            userID";   
         $result = $this->db->query($query);
-        return $result->result_array();
+        return $result->result_array();     
+    }
+    public function report_type(){
+    $query = "SELECT
+    userID,
+    questionLevelID,
+    AVG(value) AS value
+FROM
+    question_level_report
+GROUP BY
+    userID,
+    questionLevelID";   
+        $result = $this->db->query($query);
+        return $result->result_array();     
     }
 }
+

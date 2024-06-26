@@ -9,6 +9,8 @@ public $load;
  public $section_m;
  public $student_m;
  public $systemadmin_m;
+ public $question_level_m;
+ public $question_level_report_m;
  public $teacher_m;
  public $user_m;
  public $data;
@@ -36,6 +38,8 @@ public $load;
         $this->load->model('student_m');
         $this->load->model('teacher_m');
         $this->load->model('schoolyear_m');
+        $this->load->model('question_level_m');
+        $this->load->model('question_level_report_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('idcardreport', $language);
 	}
@@ -271,7 +275,46 @@ public $load;
             )
         );
         $this->data['usertypes'] = $this->usertype_m->get_usertype();
+        $users = $this->student_m->get_student();
+        $datareport = $this->question_level_report_m->report_subtype();
+        $dataReportType = $this->question_level_report_m->report_type();
+        $dataEndReport = $this->question_level_report_m->end_report();
+        $types = $this->question_level_m->get_question_level();
+        $results = [];
+
+        foreach ($users as $user) {
+            $user_data = [
+                'name' => $user->name,
+                'types' => []
+            ];
+
+            // Loop through each question level
+            foreach ($types as $type) {
+                $value = 0;
+                foreach ($dataReportType as $report) {
+                    if ($report['userID'] == $user->studentID && $report['questionLevelID'] == $type->questionLevelID) {
+                        $value = $report['value'];
+                        break;
+                    }
+                }
+
+                $user_data['types'][] = [
+                    'name' => $type->name,
+                    'value' => $value
+                ];
+            }
+            foreach($dataEndReport as $nilaiakhir){
+                if($nilaiakhir['userID'] == $user->studentID){
+                    $user_data['nilai_akhir'] = $nilaiakhir['nilai_akhir'];
+                        break;
+                }
+            }
+
+            $results[] = $user_data;
+        }
+        $this->data['subtype'] = $types;
         $this->data['classes'] = $this->classes_m->get_classes();
+        $this->data['results'] = $results;
         $this->data["subview"] = "report/idcard/IdcardReportView";
         $this->load->view('_layout_main', $this->data);
     }

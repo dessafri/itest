@@ -101,7 +101,7 @@ class Question_level extends Admin_Controller {
                         $this->load->view('_layout_main', $this->data);
                     } else {
                         $array = array(
-                            "name" => $this->input->post("name")
+                            "name" => $this->input->post("name"),
                         );
 
                         $this->question_level_m->update_question_level($array, $id);

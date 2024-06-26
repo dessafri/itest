@@ -85,7 +85,7 @@
                                                 <h5 class="panel-title" style="margin-bottom: 40px; color: white;"><?php echo $row->name; ?></h5>
                                                 <?php 
                                                 if ($examRekanan->published == 1) {
-                                                    $url = base_url('take_exam/instruction/' . $examRekanan->onlineExamID);
+                                                    $url = base_url('take_exam/instruction/' . $examRekanan->onlineExamID. '/' . $row->Id);
                                                     $paidStatus = htmlspecialchars($paidStatus, ENT_QUOTES, 'UTF-8');
                                                     $onlineExamID = htmlspecialchars($examRekanan->onlineExamID, ENT_QUOTES, 'UTF-8');
                                                     echo "<button onclick=\"newPopup('$url', '$paidStatus', '$onlineExamID','$row->Id')\" class=\"btn btn-warning\"><i class=\"fa fa-pencil\"></i> Nilai</button>";
@@ -113,7 +113,7 @@
                                                 <h5 class="panel-title" style="margin-bottom: 40px; color: white;"><?php echo $row->name; ?></h5>
                                                 <?php 
                                                 if ($examBawahan->published == 1) {
-                                                    $url = base_url('take_exam/instruction/' . $examBawahan->onlineExamID);
+                                                    $url = base_url('take_exam/instruction/' . $examBawahan->onlineExamID. '/' . $row->Id);
                                                     $paidStatus = htmlspecialchars($paidStatus, ENT_QUOTES, 'UTF-8');
                                                     $onlineExamID = htmlspecialchars($examBawahan->onlineExamID, ENT_QUOTES, 'UTF-8');
                                                     echo "<button onclick=\"newPopup('$url', '$paidStatus', '$onlineExamID','$row->Id')\" class=\"btn btn-warning\"><i class=\"fa fa-pencil\"></i> Nilai</button>";

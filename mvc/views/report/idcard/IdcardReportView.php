@@ -11,7 +11,34 @@
         <div class="row">
 
             <div class="col-sm-12">
-                
+            <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-2">No</th>
+                                <th class="col-sm-2">Nama</th>
+                                <?php foreach($subtype as $type){ ?>
+                                    <th class="col-sm-2"><?=$type->name?></th>
+                                <?php }?>
+                                <th class="col-sm-2">Nilai Akhir</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php $i = 1; foreach($results as $result) { ?>
+                                <tr>
+                                    <td data-title="id">
+                                        <?php echo $i; ?>
+                                    </td>
+                                    <td data-title="namaKaryawan">
+                                        <?=$result['name']?>
+                                    </td>
+                                    <?php foreach($result['types'] as $type){ ?>
+                                        <td><?=$type['value']?></td>
+                                    <?php } ?>
+                                    <td><?=$result['nilai_akhir'] ?></td>
+                                </tr>
+                            <?php $i++; } ?>
+                        </tbody>
+                    </table>
             </div>
 
         </div><!-- row -->

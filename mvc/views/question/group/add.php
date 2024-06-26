@@ -31,6 +31,24 @@
                         </span>
                 
                     </div>
+                    <?php
+                    if(form_error('title'))
+                        echo "<div class='form-group has-error' >";
+                    else
+                        echo "<div class='form-group' >";
+                    ?>
+                        <label for="title" class="col-sm-2 control-label">
+                            Bobot
+                            <span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="number" class="form-control" id="bobot" name="bobot" value="<?=set_value('bobot')?>" >
+                        </div>
+                        <span class="col-sm-4 control-label">
+                                <?php echo form_error('bobot'); ?>
+                        </span>
+                
+                    </div>
 
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-8">

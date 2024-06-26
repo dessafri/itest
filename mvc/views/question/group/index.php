@@ -30,6 +30,7 @@
                             <tr>
                                 <th class="col-sm-2"><?=$this->lang->line('slno')?></th>
                                 <th class="col-sm-2"><?=$this->lang->line('question_group_title')?></th>
+                                <th class="col-sm-2">Bobot</th>
                                 <?php if(permissionChecker('question_group_edit') || permissionChecker('question_group_delete') || permissionChecker('question_group_view')) { ?>
                                     <th class="col-sm-2"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
@@ -48,6 +49,9 @@
                                             else 
                                                 echo strip_tags(substr($group->title, 0, 25));
                                         ?>
+                                    </td>
+                                    <td data-title="<?=$this->lang->line('question_group_title')?>">
+                                        <?= $group->bobot ?>
                                     </td>
                                     <?php if(permissionChecker('question_group_edit') || permissionChecker('question_group_delete') || permissionChecker('question_group_view')) { ?>
 
