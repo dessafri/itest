@@ -42,6 +42,7 @@
         <link rel="stylesheet" href="<?php echo base_url('assets/datatables/buttons.dataTables.min.css'); ?>" >
 
         <link rel="stylesheet" href="<?php echo base_url('assets/inilabs/combined.css'); ?>" >
+        
 
         <?php
             if(isset($headerassets)) {

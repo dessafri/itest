@@ -22,7 +22,7 @@
                     <?php } ?>
                     <div class="col-lg-2 col-sm-2 col-md-2 col-xs-12 pull-right drop-marg">
                         <?php
-                            $array = array("0" => $this->lang->line("student_select_class"));
+                            $array = array("0" => "Select Departement");
                             if(inicompute($classes)) {
                                 foreach ($classes as $classa) {
                                     $array[$classa->classesID] = $classa->classes;

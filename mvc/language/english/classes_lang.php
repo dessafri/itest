@@ -1,10 +1,10 @@
 <?php
 
 /* List Language  */
-$lang['panel_title'] = "Class";
-$lang['add_title'] = "Add a class";
+$lang['panel_title'] = "Departement";
+$lang['add_title'] = "Add a Departement";
 $lang['slno'] = "#";
-$lang['classes_name'] = "Class";
+$lang['classes_name'] = "Departement";
 $lang['classes_numeric'] = "Class Numeric";
 $lang['teacher_name'] = "Teacher Name";
 $lang['classes_studentmaxID'] = "Student Max ID";

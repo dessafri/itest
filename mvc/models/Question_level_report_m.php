@@ -38,7 +38,7 @@ class Question_level_report_m extends MY_Model
     {
         parent::delete($id);
     }
-    public function compute_jawaban($iduser,$idrelasi)
+    public function compute_jawaban($iduser,$idrelasi,$idexam)
     {
         $query = "SELECT c.levelID AS questionLevelID,c.groupID,a.relasi_jabatan AS userID,CASE
         WHEN d.title = 'Atasan' THEN SUM(b.nilaijawaban) * 0.5
@@ -54,6 +54,7 @@ class Question_level_report_m extends MY_Model
         WHERE 
         a.userID = '$iduser'
         AND a.relasi_jabatan = '$idrelasi'
+        AND a.onlineExamID = '$idexam'
         GROUP BY c.levelID
         ";
                 $result = $this->db->query($query);
@@ -87,15 +88,64 @@ return $result->result_array();
         return $result->result_array();     
     }
     public function report_type(){
-    $query = "SELECT
-    userID,
-    questionLevelID,
-    AVG(value) AS value
+    $query = "WITH LatestExamPerUser AS (
+    SELECT
+        userID,
+        MAX(examID) AS latestExamID
+    FROM
+        question_level_report
+    GROUP BY
+        userID
+)
+SELECT
+    q.userID,
+    q.questionLevelID,
+    q.value,
+    q.examID
 FROM
-    question_level_report
-GROUP BY
-    userID,
-    questionLevelID";   
+    question_level_report q
+JOIN
+    LatestExamPerUser l ON q.userID = l.userID AND q.examID = l.latestExamID
+ORDER BY
+    q.userID,
+    q.examID DESC,
+    q.questionLevelID;
+";   
+        $result = $this->db->query($query);
+        return $result->result_array();     
+    }
+    public function report_type_limit2(){
+    $query = "WITH RankedExams AS (
+    SELECT
+        examID,
+        ROW_NUMBER() OVER (ORDER BY examID DESC) AS rn
+    FROM
+        question_level_report
+    GROUP BY
+        examID
+),
+LastTwoExams AS (
+    SELECT
+        examID
+    FROM
+        RankedExams
+    WHERE
+        rn <= 2
+)
+SELECT
+    a.userID,
+    a.questionLevelID,
+    a.value,
+    a.examID
+FROM
+    question_level_report a
+JOIN
+    LastTwoExams b ON a.examID = b.examID
+ORDER BY
+    a.examID DESC,
+    a.userID,
+    a.questionLevelID
+";   
         $result = $this->db->query($query);
         return $result->result_array();     
     }

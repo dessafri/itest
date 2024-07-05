@@ -8,7 +8,6 @@ class Classes_m extends MY_Model {
 	protected $_table_name = 'classes';
 	protected $_primary_key = 'classesID';
 	protected $_primary_filter = 'intval';
-	protected $_order_by = "classes_numeric asc";
 
 	public function __construct()
 	{
@@ -19,8 +18,6 @@ class Classes_m extends MY_Model {
 	{
 		$this->db->select('*');
 		$this->db->from('classes');
-		$this->db->join('teacher', 'classes.teacherID = teacher.teacherID', 'LEFT');
-		$this->db->order_by('classes_numeric asc');
 		$query = $this->db->get();
 		return $query->result();
 	}
@@ -74,7 +71,7 @@ class Classes_m extends MY_Model {
 
 	public function get_order_by_numeric_classes()
 	{
-		$this->db->select('*')->from('classes')->order_by('classes_numeric asc');
+		$this->db->select('*')->from('classes');
 		$query = $this->db->get();
 		return $query->result();
 	}

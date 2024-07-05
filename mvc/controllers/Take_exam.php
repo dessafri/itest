@@ -540,7 +540,7 @@ class Take_exam extends Admin_Controller
                             $givenTimes[$allUserExam->onlineExamID] = $allExams[$allUserExam->onlineExamID];
                         }
                     }
-                    $resultAnswer = $this->question_level_report_m->compute_jawaban($userID,$relasi);
+                    $resultAnswer = $this->question_level_report_m->compute_jawaban($userID,$relasi,$this->data['onlineExam']->onlineExamID);
                     $this->question_level_report_m->insert_batch_question_level_report($resultAnswer);
                     $this->data['showResult']        = $givenTimes;
                     $this->data['fail']              = $f;

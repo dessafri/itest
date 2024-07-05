@@ -530,10 +530,14 @@ class Student extends Admin_Controller
         $usertype = $this->session->userdata("usertype");
         $schoolyearID = $this->session->userdata('defaultschoolyearID');
         $studentID = htmlentities((string) escapeString($this->uri->segment(3)));
+        $this->data['Atasan'] = $this->relasi_jabatan_m->get_relasi_employee($studentID,'Atasan');
+        $this->data['Rekanan'] = $this->relasi_jabatan_m->get_relasi_employee($studentID,'Rekanan');
+        $this->data['Bawahan'] = $this->relasi_jabatan_m->get_relasi_employee($studentID,'Bawahan');
         $url = htmlentities((string) escapeString($this->uri->segment(4)));
         if ((int) $studentID && (int) $url) {
             $this->data['classes'] = $this->classes_m->get_classes();
             $this->data['student'] = $this->student_m->get_single_student(array('studentID' => $studentID, 'schoolyearID' => $schoolyearID));
+            $this->data['students_data'] = $this->student_m->general_get_student();
 
             $this->data['parents'] = $this->parents_m->get_parents();
             $this->data['studentgroups'] = $this->studentgroup_m->get_studentgroup();
@@ -622,7 +626,33 @@ class Student extends Admin_Controller
                             'extracurricularactivities' => $this->input->post('extraCurricularActivities'),
                             'remarks' => $this->input->post('remarks'),
                         );
-
+                        $arrayAtasan = $this->input->post('AtasanID');
+                        $arrayRekanan = $this->input->post('RekananID');
+                        $arrayBawahan = $this->input->post('BawahanID');
+                        $insert_data = array();
+                        foreach ($arrayAtasan as $data) {
+                            $insert_data[] = array(
+                                'user' => $studentID,
+                                'user_relation' => intval($data),
+                                'keterangan' => 'Atasan',
+                            );
+                        }
+                        foreach ($arrayRekanan as $data) {
+                            $insert_data[] = array(
+                                'user' => $studentID,
+                                'user_relation' => intval($data),
+                                'keterangan' => 'Rekanan',
+                            );
+                        }
+                        foreach ($arrayBawahan as $data) {
+                            $insert_data[] = array(
+                                'user' => $studentID,
+                                'user_relation' => intval($data),
+                                'keterangan' => 'Bawahan',
+                            );
+                        }
+                        $this->relasi_jabatan_m->delete_relation($studentID);
+                        $insert_result = $this->relasi_jabatan_m->insert_relasi_jabatan($insert_data);
                         $this->studentextend_m->update_studentextend_by_studentID($studentExtendArray, $studentID);
                         $this->student_m->update_student($array, $studentID);
                         $this->session->set_flashdata('success', $this->lang->line('menu_success'));

@@ -49,6 +49,66 @@
                         </span>
                     </div>
 
+                    <div class="form-group <?=form_error('AtasanID') ? 'has-error' : ''?>">
+                        <label for="AtasanID" class="col-sm-2 control-label">
+                            Atasan
+                        </label>
+                        <div class="col-sm-6">
+                            <?php
+                            // var_dump($Atasan);
+                            // exit;
+                            $selectedStudentIDs = array_map(function($Atasan) {
+                                return $Atasan->studentID;
+                            }, $Atasan);
+                                foreach ($students_data as $data) {
+                                    $array[$data->studentID] = $data->name;
+                                }
+                                echo form_multiselect("AtasanID[]", $array, $selectedStudentIDs, "id='AtasanID' class='form-control atasanID select2'");
+                            ?>
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('guargAtasanIDianID'); ?>
+                        </span>
+                    </div>
+                    <div class="form-group <?=form_error('RekananID') ? 'has-error' : ''?>">
+                        <label for="RekananID" class="col-sm-2 control-label">
+                            Rekanan
+                        </label>
+                        <div class="col-sm-6">
+                            <?php
+                            $selectedStudentIDsRekanan = array_map(function($Rekanan) {
+                                return $Rekanan->studentID;
+                            }, $Rekanan);
+                            foreach ($students_data as $data) {
+                                $array[$data->studentID] = $data->name;
+                            }
+                                echo form_multiselect("RekananID[]", $array, $selectedStudentIDsRekanan, "id='RekananID' class='form-control guargianID select2'");
+                            ?>
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('RekananID'); ?>
+                        </span>
+                    </div>
+                    <div class="form-group <?=form_error('BawahanID') ? 'has-error' : ''?>">
+                        <label for="BawahanID" class="col-sm-2 control-label">
+                            Bawahan
+                        </label>
+                        <div class="col-sm-6">
+                            <?php
+                            $selectedStudentIDsBawahan = array_map(function($Bawahan) {
+                                return $Bawahan->studentID;
+                            }, $Bawahan);
+                            foreach ($students_data as $data) {
+                                $array[$data->studentID] = $data->name;
+                            }
+                                echo form_multiselect("BawahanID[]", $array, $selectedStudentIDsBawahan, "id='BawahanID' class='form-control guargianID select2'");
+                            ?>
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('BawahanID'); ?>
+                        </span>
+                    </div>
+
                     <div class="form-group <?=form_error('dob') ? 'has-error' : ''?>">
                         <label for="dob" class="col-sm-2 control-label">
                             <?=$this->lang->line("student_dob")?>

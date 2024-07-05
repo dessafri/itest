@@ -11,7 +11,7 @@
 </div>
 
 <div class="row">
-    <div class="col-sm-7 fu-example section">
+    <div class="col-sm-10 fu-example section">
         <div class="box outheBoxShadow wizard" data-initialize="wizard" id="questionWizard">
             <div class="box-header bg-white">
                 <div class="checkbox hints">
@@ -174,7 +174,7 @@
         </div>
     </div>
 
-    <div class="col-sm-5">
+    <div class="col-sm-2">
         <div class="row">
             <div class="col-sm-12 counterDiv" style="display: none;">
                 <div class="box outheBoxShadow">
@@ -217,7 +217,7 @@
                             </h3>
                         </div>
 
-                        <div class="box-body margAndBox" style="">
+                        <div class="box-body margAndBox">
                             <nav aria-label="Page navigation">
                                 <ul class="examQuesBox questionColor">
                                     <?php

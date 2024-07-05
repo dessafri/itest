@@ -12,33 +12,64 @@
 
             <div class="col-sm-12">
             <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
-                        <thead>
-                            <tr>
-                                <th class="col-sm-2">No</th>
-                                <th class="col-sm-2">Nama</th>
-                                <?php foreach($subtype as $type){ ?>
-                                    <th class="col-sm-2"><?=$type->name?></th>
-                                <?php }?>
-                                <th class="col-sm-2">Nilai Akhir</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <?php $i = 1; foreach($results as $result) { ?>
-                                <tr>
-                                    <td data-title="id">
-                                        <?php echo $i; ?>
-                                    </td>
-                                    <td data-title="namaKaryawan">
-                                        <?=$result['name']?>
-                                    </td>
-                                    <?php foreach($result['types'] as $type){ ?>
-                                        <td><?=$type['value']?></td>
-                                    <?php } ?>
-                                    <td><?=$result['nilai_akhir'] ?></td>
-                                </tr>
-                            <?php $i++; } ?>
-                        </tbody>
-                    </table>
+        <thead>
+            <tr>
+                <th class="col-sm-1">No</th>
+                <th class="col-sm-2">Nama</th>
+                <?php foreach($subtype as $type){ ?>
+                    <th class="col-sm-2"><?=$type->name?></th>
+                <?php }?>
+                <th class="col-sm-2">Nilai Akhir</th>
+                <th class="col-sm-1">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $i = 1; foreach($results as $result) { ?>
+                <tr>
+                    <td data-title="id">
+                        <?php echo $i; ?>
+                    </td>
+                    <td data-title="namaKaryawan">
+                        <?=$result['name']?>
+                    </td>
+                    <?php foreach($result['types'] as $type){ ?>
+                        <td><?=$type['value']?></td>
+                    <?php } ?>
+                    <td><?= round($result['nilai_akhir'], 2) ?></td>
+                    <td>
+                        <button class="btn btn-primary" data-toggle="collapse" data-target="#nested-table-<?=$i?>"><i class="fa fa-eye"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="<?= count($subtype) + 4 ?>" class="hiddenRow">
+                        <div class="collapse" id="nested-table-<?=$i?>">
+                            <table class="table table-bordered table-hover nested-table">
+                                <thead>
+                                    <tr>
+                                    <th class="col-sm-1">No</th>
+                                    <?php  foreach($subtype as $type){ ?>
+                                        <th class="col-sm-2"><?=$type->name?></th>
+                                    <?php }?>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php $no = 1; foreach($result['result_test'] as $resultTes){ ?>
+                                    <tr>
+                                        <td><?= $no?></td>
+                                        <?php foreach($resultTes['results'] as $hasil){ ?>
+                                            <td><?= $hasil['value_tes']?></td>
+                                        <?php } ?>
+                                    </tr>
+                                    <?php $no++; }?>
+                                    <!-- Add more nested rows as needed -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                <?php $i++; } ?>
+        </tbody>
+    </table>
             </div>
 
         </div><!-- row -->
@@ -47,7 +78,14 @@
 
 <div id="load_idcardreport"></div>
 
-
+<script>
+        $(document).ready(function () {
+            $('[data-toggle="collapse"]').click(function () {
+                var target = $(this).data('target');
+                $(target).collapse('toggle');
+            });
+        });
+    </script>
 <script type="text/javascript">
     
     function printDiv(divID) {
@@ -59,6 +97,7 @@
         document.body.innerHTML = oldPage;
         window.location.reload();
     }
+    
 
     $(function(){
         $("#usertypeID").val(0);
